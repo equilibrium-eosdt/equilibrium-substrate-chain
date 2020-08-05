@@ -1,0 +1,14 @@
+{
+    "EosdtcntractParameters": {
+      "total_debt": "u128"
+    },
+    "RequestId": "u64",
+    "Argument": {
+      "x": "u32"
+    },
+    "Request":{
+      "argument":"Argument",
+      "time_finilize":"u32",
+      "time_response":"u32"
+    }
+  }

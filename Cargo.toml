@@ -1,0 +1,12 @@
+[workspace]
+members = [
+	"node",
+	"runtime",
+	"pallets/eq-balances",
+	"pallets/eq-session-manager",
+	"eq-primitives",
+]
+
+[profile.release]
+# Substrate runtime requires unwinding.
+panic = "unwind"

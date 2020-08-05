@@ -1,0 +1,82 @@
+[package]
+name = "eq-session-manager"
+version = "0.1.0"
+authors = ["equilibrium"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "1.2.0", default-features = false, features = ["derive"] }
+serde = { version = "1.0.101", optional = true }
+safe-mix = { default-features = false, version = '1.0.0' }
+
+[dependencies.frame-support]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dependencies.system]
+default-features = false
+package = 'frame-system'
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dependencies.sp-runtime]
+ git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+ default-features = false
+
+[dev-dependencies.sp-core]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dev-dependencies.sp-io]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dev-dependencies.sp-runtime]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dependencies.pallet-session]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dependencies.sp-staking]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+
+[dependencies.sp-std]
+ git = 'https://github.com/paritytech/substrate.git'
+version = '2.0.0-rc5'
+tag="v2.0.0-rc5+2"
+ default-features = false
+
+[features]
+default = ['std']
+std = [
+	'codec/std',
+	'frame-support/std',
+	'safe-mix/std',
+	'system/std',
+    "sp-runtime/std",
+	"pallet-session/std",
+	"sp-staking/std",
+	"sp-std/std",
+	"serde",
+]
+
