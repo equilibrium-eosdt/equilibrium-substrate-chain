@@ -10,7 +10,7 @@
    Using Polkadot’s advanced substrate technology to create its own blockchain, Equilibrium will extend its DeFi product line to a one-stop cross-chain money market. It is designed to end market segmentation and will let users conveniently fill all their DeFi needs in one place -- uniting decentralized liquidity pools, enabling cross-chain lending with built-in synthetic assets, and advanced price discovery and bailout mechanics to ensure maximum liquidity. 
 
    Users will be able to trade multiple crypto assets from Equilibrium’s native decentralized exchange and use its convenient interface to manage their assets across multiple blockchain protocols, without new logins. 
-   Please visit the Equilibrium website: [www.equilibrium.io] (https://www.equilibrium.io) to learn details. 
+   Please visit the Equilibrium website: [www.equilibrium.io] to learn details. 
 
 ## Our roadmap
 
