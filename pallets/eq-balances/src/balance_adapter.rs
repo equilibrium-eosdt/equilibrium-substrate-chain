@@ -1,9 +1,8 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+pub use super::imbalances::{NegativeImbalance, PositiveImbalance};
 use frame_support::traits::{Currency, Get};
 use sp_std::marker;
-
-pub use super::imbalances::{NegativeImbalance, PositiveImbalance};
 
 /// Currency trait implementation based on data from CurrencyGetter trait
 pub struct BalanceAdapter<T, R, CurrencyGetter>(marker::PhantomData<(T, R, CurrencyGetter)>);

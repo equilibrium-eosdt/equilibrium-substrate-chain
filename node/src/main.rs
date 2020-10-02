@@ -5,9 +5,10 @@ mod chain_spec;
 mod service;
 mod cli;
 mod command;
+mod executor;
 mod rpc;
 extern crate jsonrpc_core;
 
 fn main() -> sc_cli::Result<()> {
-	command::run()
+    command::run()
 }

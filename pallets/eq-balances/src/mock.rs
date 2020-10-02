@@ -64,8 +64,9 @@ impl Trait for Test {
     type TotalIssuance = TotalIssuence;
     type ExistentialDeposit = ExistentialDeposit;
     type BalanceChecker = ();
-
     type Event = ();
+    type BalanceGetter = ModuleBalances;
+    type WeightInfo = ();
 }
 
 pub type ModuleBalances = Module<Test>;

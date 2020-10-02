@@ -1,10 +1,15 @@
 [workspace]
 members = [
-	"node",
-	"runtime",
-	"pallets/eq-balances",
-	"pallets/eq-session-manager",
-	"eq-primitives",
+  "node",
+  "runtime",
+  "pallets/eq-balances",
+  "pallets/eq-distribution",
+  "pallets/eq-session-manager",
+  "pallets/eq-vesting",
+  "pallets/eq-claim",
+  "eq-primitives",
+  "eq-integration-testing",
+  "eq-integration-testing/eq-integration-testing-macro",
 ]
 
 [profile.release]

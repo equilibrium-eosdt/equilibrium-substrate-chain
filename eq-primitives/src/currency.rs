@@ -6,7 +6,6 @@ use frame_support::codec::{Decode, Encode};
 use serde::{Deserialize, Serialize};
 use sp_runtime::RuntimeDebug;
 
-/// Represents one of supported currencies.
 #[derive(Encode, Decode, Clone, Copy, PartialEq, RuntimeDebug, Hash)]
 #[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 #[repr(u8)]
@@ -50,10 +49,10 @@ impl Currency {
     pub fn value(&self) -> u8 {
         match *self {
             Currency::Unknown => 0x0,
-            Currency::Eq => 0x1,
-            Currency::Eth => 0x2,
-            Currency::Btc => 0x3,
-            Currency::Usd => 0x4,
+            Currency::Usd => 0x1,
+            Currency::Eq => 0x2,
+            Currency::Eth => 0x3,
+            Currency::Btc => 0x4,
             Currency::Eos => 0x5,
         }
     }
@@ -63,10 +62,10 @@ impl From<u8> for Currency {
     fn from(orig: u8) -> Self {
         match orig {
             0x0 => Currency::Unknown,
-            0x1 => Currency::Eq,
-            0x2 => Currency::Eth,
-            0x3 => Currency::Btc,
-            0x4 => Currency::Usd,
+            0x1 => Currency::Usd,
+            0x2 => Currency::Eq,
+            0x3 => Currency::Eth,
+            0x4 => Currency::Btc,
             0x5 => Currency::Eos,
             _ => Currency::Unknown,
         }
@@ -97,7 +96,7 @@ pub mod test {
         }
     }
     impl PartialEq for CurrencyTag {
-        fn eq(&self, other: &Self) -> bool {
+        fn eq(&self, _other: &Self) -> bool {
             self.value() == self.value()
         }
     }

@@ -1,0 +1,12 @@
+[package]
+authors = ["user <veniaminhrapov@gmail.com>"]
+edition = "2018"
+name = "eq-integration-testing-macro"
+version = "0.1.0"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0"
+syn = "1.0"

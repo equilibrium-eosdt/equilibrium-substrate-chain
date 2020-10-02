@@ -1,82 +1,90 @@
 [package]
-name = "eq-session-manager"
-version = "0.1.0"
 authors = ["equilibrium"]
 edition = "2018"
+name = "eq-session-manager"
+version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "1.2.0", default-features = false, features = ["derive"] }
-serde = { version = "1.0.101", optional = true }
-safe-mix = { default-features = false, version = '1.0.0' }
+codec = {package = "parity-scale-codec", version = "1.2.0", default-features = false, features = ["derive"]}
+safe-mix = {default-features = false, version = '1.0.0'}
+serde = {version = "1.0.101", optional = true}
 
 [dependencies.frame-support]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dependencies.system]
 default-features = false
-package = 'frame-system'
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+package = 'frame-system'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dependencies.sp-runtime]
- git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
- default-features = false
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dev-dependencies.sp-core]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dev-dependencies.sp-io]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dev-dependencies.sp-runtime]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dependencies.pallet-session]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dependencies.sp-staking]
 default-features = false
 git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
 [dependencies.sp-std]
- git = 'https://github.com/paritytech/substrate.git'
-version = '2.0.0-rc5'
-tag="v2.0.0-rc5+2"
- default-features = false
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 
+[dependencies.frame-benchmarking]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+optional = true
+package = 'frame-benchmarking'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
 [features]
 default = ['std']
 std = [
-	'codec/std',
-	'frame-support/std',
-	'safe-mix/std',
-	'system/std',
-    "sp-runtime/std",
-	"pallet-session/std",
-	"sp-staking/std",
-	"sp-std/std",
-	"serde",
+  'codec/std',
+  'frame-support/std',
+  'safe-mix/std',
+  'system/std',
+  "sp-runtime/std",
+  "pallet-session/std",
+  "sp-staking/std",
+  "sp-std/std",
+  "serde",
 ]
 
+runtime-benchmarks = ["frame-benchmarking"]

@@ -1,0 +1,88 @@
+[package]
+authors = ["user <veniaminhrapov@gmail.com>"]
+edition = "2018"
+name = "eq-distribution"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+codec = {package = "parity-scale-codec", version = "1.2.0", default-features = false, features = ["derive"]}
+log = "0.4.11"
+safe-mix = {default-features = false, version = '1.0.0'}
+
+[dependencies.sp-arithmetic]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.eq-primitives]
+default-features = false
+package = "eq-primitives"
+path = "../../eq-primitives"
+version = "0.1.0"
+
+[dependencies.frame-support]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.system]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+package = 'frame-system'
+
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.sp-runtime]
+git = 'https://github.com/paritytech/substrate.git'
+
+default-features = false
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dev-dependencies.sp-core]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dev-dependencies.sp-io]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dev-dependencies.sp-runtime]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.timestamp]
+git = 'https://github.com/paritytech/substrate.git'
+
+default-features = false
+package = "pallet-timestamp"
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[features]
+default = ['std']
+std = [
+  'codec/std',
+  'frame-support/std',
+  'safe-mix/std',
+  'system/std',
+  "sp-runtime/std",
+  "sp-arithmetic/std",
+  "timestamp/std",
+  "eq-primitives/std",
+]

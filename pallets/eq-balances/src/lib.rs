@@ -1,45 +1,44 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+pub mod balance_adapter;
+mod benchmarking;
+mod benchmarks;
+mod imbalances;
 mod mock;
+pub mod signed_balance;
 mod tests;
 
-pub mod balance_adapter;
-mod imbalances;
-pub mod signed_balance;
-
+use codec::{Codec, Decode, Encode, FullCodec};
 pub use eq_primitives::currency;
 use eq_primitives::currency::Currency;
-
-use codec::{Codec, Decode, Encode, FullCodec};
+use frame_support::traits::{
+    ExistenceRequirement, Get, Imbalance, OnKilledAccount, SignedImbalance, TryDrop,
+    WithdrawReasons,
+};
 use frame_support::{
-    debug, decl_error, decl_event, decl_module, decl_storage,
+    decl_error, decl_event, decl_module, decl_storage,
     dispatch::{DispatchError, DispatchResult},
     ensure,
     storage::IterableStorageDoubleMap,
-    storage::IterableStorageMap,
-    traits::{
-        ExistenceRequirement, Get, Imbalance, OnKilledAccount, SignedImbalance, TryDrop,
-        WithdrawReasons,
-    },
+    weights::Weight,
     Parameter,
 };
+pub use imbalances::{NegativeImbalance, PositiveImbalance};
 use impl_trait_for_tuples::impl_for_tuples;
 #[cfg(feature = "std")]
 use serde::{Deserialize, Serialize};
 pub use signed_balance::{SignedBalance, SignedBalance::*};
-use sp_runtime::traits::{
-    AtLeast32BitUnsigned, Bounded, CheckedAdd, CheckedSub, MaybeSerializeDeserialize, Member,
-    Saturating, Zero,
-};
+use sp_runtime::traits::{AtLeast32BitUnsigned, MaybeSerializeDeserialize, Member, Zero};
 use sp_std::prelude::*;
-use sp_std::{collections::btree_map::BTreeMap, fmt::Debug, result};
+use sp_std::{fmt::Debug, result};
+use system as frame_system;
 use system::{ensure_root, ensure_signed};
 
-pub use imbalances::{NegativeImbalance, PositiveImbalance};
-use sp_arithmetic::{
-    traits::Saturating as arifmetic_saturating, FixedI128, FixedI64, FixedPointNumber,
-};
-use system as frame_system;
+pub trait WeightInfo {
+    fn transfer(b: u32) -> Weight;
+    fn deposit(b: u32) -> Weight;
+    fn burn(b: u32) -> Weight;
+}
 
 pub trait Trait: system::Trait {
     // add enum currency as a type
@@ -57,8 +56,10 @@ pub trait Trait: system::Trait {
     type ExistentialDeposit: Get<Self::Balance>;
 
     type BalanceChecker: BalanceChecker<Self::Balance, Self::AccountId>;
+    type BalanceGetter: BalanceGetter<Self::AccountId, Self::Balance>;
 
     type Event: From<Event<Self>> + Into<<Self as system::Trait>::Event>;
+    type WeightInfo: WeightInfo;
 }
 
 /// Stores total values of issuance and debt.
@@ -132,7 +133,8 @@ decl_module! {
         fn deposit_event() = default;
 
         /// Performs transfer to the specified account
-        #[weight = 10_000]
+        // #[weight = 10_000]
+        #[weight = T::WeightInfo::transfer(1)]
         pub fn transfer(origin, currency: currency::Currency, to: <T as system::Trait>::AccountId, value: T::Balance) -> DispatchResult
         {
             let from = ensure_signed(origin)?;
@@ -140,10 +142,13 @@ decl_module! {
         }
 
         /// Performs deposit to the specified account
-        #[weight = 10_000]
+        // #[weight = 10_000]
+        #[weight = T::WeightInfo::deposit(1)]
         pub fn deposit(origin, currency: currency::Currency, to: <T as system::Trait>::AccountId, value: T::Balance) -> DispatchResult
         {
             ensure_root(origin)?;
+
+            #[allow(unused_must_use)]
             if <Account<T>>::contains_key(&to, &currency) {
                 Self::deposit_into_existing(currency, &to, value)?;
             } else {
@@ -153,16 +158,39 @@ decl_module! {
         }
 
         /// Performs burn from the specified account
-        #[weight = 10_000]
+        // #[weight = 10_000]
+        #[weight = T::WeightInfo::burn(1)]
         pub fn burn(origin, currency: currency::Currency, from: <T as system::Trait>::AccountId, value: T::Balance) -> DispatchResult
         {
             ensure_root(origin)?;
-            Self::withdraw(currency, &from, value, WithdrawReasons::all(), ExistenceRequirement::AllowDeath)?;
+
+            #[allow(unused_must_use)] {
+                Self::withdraw(
+                    currency,
+                    &from,
+                    value,
+                    WithdrawReasons::all(),
+                    ExistenceRequirement::AllowDeath
+                )?;
+            }
+
             Ok(())
         }
     }
 }
 
+pub trait BalanceGetter<AccountId, Balance>
+where
+    Balance: Debug + Member + Into<u64>,
+{
+    fn get_balance(who: &AccountId, currency: &currency::Currency) -> SignedBalance<Balance>;
+}
+
+impl<T: Trait> BalanceGetter<T::AccountId, T::Balance> for Module<T> {
+    fn get_balance(who: &T::AccountId, currency: &currency::Currency) -> SignedBalance<T::Balance> {
+        <Account<T>>::get(who, currency)
+    }
+}
 /// Contains several operations to modify balances
 pub trait BalanceSetter<AccountId, Balance>
 where
@@ -333,6 +361,14 @@ where
         who: &AccountId,
         value: Balance,
     ) -> PositiveImbalance<Balance>;
+    fn resolve_creating(
+        currency: currency::Currency,
+        who: &AccountId,
+        value: NegativeImbalance<Balance>,
+    ) {
+        let v = value.peek();
+        drop(value.offset(Self::deposit_creating(currency, who, v)));
+    }
     fn withdraw(
         currency: currency::Currency,
         who: &AccountId,
@@ -368,8 +404,8 @@ impl<T: Trait> EqCurrency<T::AccountId, T::Balance> for Module<T> {
         }
     }
 
-    fn can_slash(currency: currency::Currency, who: &T::AccountId, value: T::Balance) -> bool {
-        panic!("NotImplementedPanic: can_slash!");
+    fn can_slash(_currency: currency::Currency, _who: &T::AccountId, _value: T::Balance) -> bool {
+        unimplemented!("fn can_slash");
     }
 
     fn currency_total_issuance(_currency: currency::Currency) -> T::Balance {
@@ -380,22 +416,20 @@ impl<T: Trait> EqCurrency<T::AccountId, T::Balance> for Module<T> {
         T::ExistentialDeposit::get()
     }
 
-    fn burn(
-        _currency: currency::Currency,
-        mut amount: T::Balance,
-    ) -> PositiveImbalance<T::Balance> {
-        panic!("NotImplementedPanic: burn!");
+    fn burn(_currency: currency::Currency, _amount: T::Balance) -> PositiveImbalance<T::Balance> {
+        unimplemented!("fn burn");
     }
 
-    fn issue(
-        _currency: currency::Currency,
-        mut amount: T::Balance,
-    ) -> NegativeImbalance<T::Balance> {
-        panic!("NotImplementedPanic: issue!");
+    fn issue(_currency: currency::Currency, _amount: T::Balance) -> NegativeImbalance<T::Balance> {
+        unimplemented!("fn issue");
     }
 
     fn free_balance(currency: currency::Currency, who: &T::AccountId) -> T::Balance {
-        panic!("NotImplementedPanic: free_balance!");
+        let balance = <Account<T>>::get(&who, &currency);
+        match balance {
+            SignedBalance::Positive(balance) => balance,
+            SignedBalance::Negative(_) => T::Balance::zero(),
+        }
     }
 
     fn ensure_can_withdraw(
@@ -473,9 +507,9 @@ impl<T: Trait> EqCurrency<T::AccountId, T::Balance> for Module<T> {
     fn slash(
         _currency: currency::Currency,
         _who: &T::AccountId,
-        value: T::Balance,
+        _value: T::Balance,
     ) -> (NegativeImbalance<T::Balance>, T::Balance) {
-        panic!("NotImplementedPanic: slash!");
+        unimplemented!("fn slash");
     }
 
     fn deposit_into_existing(

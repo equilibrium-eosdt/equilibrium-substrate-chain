@@ -113,6 +113,7 @@ fn first_session_no_validators() {
     });
 }
 
+#[test]
 fn second_session_validators_from_config() {
     new_test_ext().execute_with(|| {
         force_new_session();
@@ -308,12 +309,13 @@ fn session_change_flag() {
 }
 
 #[test]
-fn session_unregistred_validator_added() {
+fn session_unregistered_validator_added() {
     new_test_ext().execute_with(|| {
         force_new_session();
         initialize_block(1);
 
         let actual = ModuleSessionManager::add_validator(system::RawOrigin::Root.into(), 333);
-        let expected = ErrorSessionManager::NotRegistred;
+        let expected = ErrorSessionManager::NotRegistered;
+        assert_err!(actual, expected);
     });
 }

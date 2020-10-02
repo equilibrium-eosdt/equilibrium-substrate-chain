@@ -1,1 +1,8 @@
 target/
+
+pallets/.DS_Store
+eq-integration-testing/src/.DS_Store
+
+.vscode/
+.idea/
+.idea/workspace.xml

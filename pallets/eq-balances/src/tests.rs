@@ -65,7 +65,7 @@ fn check_balances_aggregates(
 }
 use std::cell::RefCell;
 thread_local! {
-    static ErrorCount: RefCell<u64> = RefCell::new(0);
+    static ERROR_COUNT: RefCell<u64> = RefCell::new(0);
 }
 
 use frame_support::dispatch::fmt::Display;
@@ -73,7 +73,7 @@ fn assert_eq<T: PartialOrd + Display>(msg: &str, left: T, right: T, line: u32) {
     if left == right {
         return;
     }
-    ErrorCount.with(|v| v.replace_with(|x| *x + 1));
+    ERROR_COUNT.with(|v| v.replace_with(|x| *x + 1));
     print!("\x1b[0;31m{}:\x1b[0m", msg);
     println!(
         "left: {}, right: {}, file: {}:{}",
@@ -141,18 +141,21 @@ fn test_aggregates_balances() {
 #[test]
 fn test_deposit() {
     new_test_ext().execute_with(|| {
-        ErrorCount.with(|v| v.replace(0));
+        ERROR_COUNT.with(|v| v.replace(0));
         let account_id_100: u64 = 100;
         let account_id_200: u64 = 200;
         let account_id_300: u64 = 300;
         let account_id_400: u64 = 400;
 
-        ModuleBalances::deposit_into_existing(Usd, &account_id_100, 50);
-        ModuleBalances::deposit_creating(Usd, &account_id_200, 100);
-        ModuleBalances::deposit_into_existing(Usd, &account_id_100, 50);
-        ModuleBalances::deposit_creating(Usd, &account_id_200, 100);
-        ModuleBalances::deposit_into_existing(Usd, &account_id_300, 300);
-        ModuleBalances::deposit_creating(Usd, &account_id_400, 400);
+        #[allow(unused_must_use)]
+        {
+            ModuleBalances::deposit_into_existing(Usd, &account_id_100, 50);
+            ModuleBalances::deposit_creating(Usd, &account_id_200, 100);
+            ModuleBalances::deposit_into_existing(Usd, &account_id_100, 50);
+            ModuleBalances::deposit_creating(Usd, &account_id_200, 100);
+            ModuleBalances::deposit_into_existing(Usd, &account_id_300, 300);
+            ModuleBalances::deposit_creating(Usd, &account_id_400, 400);
+        }
 
         check_balance_and_debt(&account_id_100, 100, 0, Usd, line!());
         check_balance_and_debt(&account_id_200, 200, 0, Usd, line!());
@@ -160,10 +163,13 @@ fn test_deposit() {
         check_balance_and_debt(&account_id_400, 400, 0, Usd, line!());
         check_balances_aggregates(Usd, 60000001000, 0, line!());
 
-        ModuleBalances::deposit_into_existing(Eos, &account_id_100, 100);
-        ModuleBalances::deposit_creating(Eos, &account_id_200, 200);
-        ModuleBalances::deposit_into_existing(Eos, &account_id_300, 300);
-        ModuleBalances::deposit_creating(Eos, &account_id_400, 400);
+        #[allow(unused_must_use)]
+        {
+            ModuleBalances::deposit_into_existing(Eos, &account_id_100, 100);
+            ModuleBalances::deposit_creating(Eos, &account_id_200, 200);
+            ModuleBalances::deposit_into_existing(Eos, &account_id_300, 300);
+            ModuleBalances::deposit_creating(Eos, &account_id_400, 400);
+        }
 
         check_balance_and_debt(&account_id_100, 100, 0, Eos, line!());
         check_balance_and_debt(&account_id_200, 200, 0, Eos, line!());
@@ -171,7 +177,7 @@ fn test_deposit() {
         check_balance_and_debt(&account_id_400, 400, 0, Eos, line!());
         check_balances_aggregates(Eos, 1000, 0, line!());
 
-        ErrorCount.with(|f| {
+        ERROR_COUNT.with(|f| {
             assert_eq!(*f.borrow(), 0);
         });
     });
@@ -180,7 +186,7 @@ fn test_deposit() {
 #[test]
 fn test_ensure_can_withdraw_and_withdraw() {
     new_test_ext().execute_with(|| {
-        ErrorCount.with(|v| v.replace(0));
+        ERROR_COUNT.with(|v| v.replace(0));
         let account_id_100: u64 = 100;
         let account_id_200: u64 = 200;
         let account_id_300: u64 = 300;
@@ -215,41 +221,44 @@ fn test_ensure_can_withdraw_and_withdraw() {
             0
         ));
 
-        ModuleBalances::withdraw(
-            Usd,
-            &account_id_100,
-            100,
-            WithdrawReason::TransactionPayment.into(),
-            ExistenceRequirement::KeepAlive,
-        );
-        ModuleBalances::withdraw(
-            Usd,
-            &account_id_200,
-            200,
-            WithdrawReasons::all(),
-            ExistenceRequirement::AllowDeath,
-        );
-        ModuleBalances::withdraw(
-            Usd,
-            &account_id_300,
-            300,
-            WithdrawReasons::all(),
-            ExistenceRequirement::KeepAlive,
-        );
-        ModuleBalances::withdraw(
-            Usd,
-            &account_id_400,
-            400,
-            WithdrawReasons::all(),
-            ExistenceRequirement::AllowDeath,
-        );
+        #[allow(unused_must_use)]
+        {
+            ModuleBalances::withdraw(
+                Usd,
+                &account_id_100,
+                100,
+                WithdrawReason::TransactionPayment.into(),
+                ExistenceRequirement::KeepAlive,
+            );
+            ModuleBalances::withdraw(
+                Usd,
+                &account_id_200,
+                200,
+                WithdrawReasons::all(),
+                ExistenceRequirement::AllowDeath,
+            );
+            ModuleBalances::withdraw(
+                Usd,
+                &account_id_300,
+                300,
+                WithdrawReasons::all(),
+                ExistenceRequirement::KeepAlive,
+            );
+            ModuleBalances::withdraw(
+                Usd,
+                &account_id_400,
+                400,
+                WithdrawReasons::all(),
+                ExistenceRequirement::AllowDeath,
+            );
+        }
 
         check_balance_and_debt(&account_id_100, 0, 100, Usd, line!());
         check_balance_and_debt(&account_id_200, 0, 200, Usd, line!());
         check_balance_and_debt(&account_id_300, 0, 300, Usd, line!());
         check_balance_and_debt(&account_id_400, 0, 400, Usd, line!());
         check_balances_aggregates(Usd, 60000000000, 1000, line!());
-        ErrorCount.with(|f| {
+        ERROR_COUNT.with(|f| {
             assert_eq!(*f.borrow(), 0);
         });
     });

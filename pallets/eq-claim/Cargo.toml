@@ -1,0 +1,129 @@
+[package]
+authors = ["user <veniaminhrapov@gmail.com>"]
+edition = "2018"
+name = "eq-claim"
+version = "0.1.0"
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = {package = "parity-scale-codec", version = "1.3.1", default-features = false, features = ["derive"]}
+enumflags2 = {version = "0.6.2"}
+libsecp256k1 = {version = "0.3.2", default-features = false, optional = true}
+rustc-hex = {version = "2.0.1", default-features = false}
+serde = {version = "1.0.101", optional = true}
+
+[dependencies.sp-arithmetic]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.sp-std]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.sp-runtime]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.frame-support]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.sp-io]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.frame-system]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+package = 'frame-system'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.frame-benchmarking]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+optional = true
+package = 'frame-benchmarking'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dependencies.eq-balances]
+default-features = false
+package = "eq-balances"
+path = "../eq-balances"
+version = "0.1.0"
+
+[dependencies.eq-vesting]
+default-features = false
+package = "eq-vesting"
+path = "../eq-vesting"
+version = "0.1.0"
+
+[dependencies.eq-utils]
+default-features = false
+package = "eq-utils"
+path = "../../eq-utils"
+version = "0.1.0"
+
+[dependencies.eq-primitives]
+default-features = false
+package = "eq-primitives"
+path = "../../eq-primitives"
+version = "0.1.0"
+
+[dev-dependencies.sp-io]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dev-dependencies.sp-core]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dev-dependencies.sp-storage]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+tag = "v2.0.0-rc6"
+version = '2.0.0-rc6'
+
+[dev-dependencies]
+hex-literal = "0.2.1"
+libsecp256k1 = "0.3.2"
+serde_json = "1.0.41"
+trie-db = "0.22.0"
+
+[features]
+default = ["std"]
+runtime-benchmarks = [
+  "frame-benchmarking",
+  "libsecp256k1/hmac",
+]
+std = [
+  "serde/std",
+  "codec/std",
+  "rustc-hex/std",
+  "sp-arithmetic/std",
+  "sp-std/std",
+  "sp-io/std",
+  "sp-runtime/std",
+  "frame-support/std",
+  "frame-system/std",
+  "eq-balances/std",
+  "eq-vesting/std",
+  "eq-utils/std",
+  "eq-primitives/std",
+]
