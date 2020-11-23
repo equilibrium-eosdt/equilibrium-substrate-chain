@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["BalanceAdapter","Adapts `EqCurrency` to work as `BasicCurrency` in Substrate runtime"]]});

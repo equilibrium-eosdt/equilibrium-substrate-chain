@@ -1,0 +1,5 @@
+(function() {var implementors = {};
+implementors["eq_claim"] = [{"text":"impl PartialOrd&lt;EthereumAddress&gt; for EthereumAddress","synthetic":false,"types":[]}];
+implementors["eq_oracle"] = [{"text":"impl PartialOrd&lt;Public&gt; for Public","synthetic":false,"types":[]}];
+implementors["eq_primitives"] = [{"text":"impl PartialOrd&lt;Currency&gt; for Currency","synthetic":false,"types":[]},{"text":"impl PartialOrd&lt;CurrencyTag&gt; for CurrencyTag","synthetic":false,"types":[]},{"text":"impl PartialOrd&lt;UserGroup&gt; for UserGroup","synthetic":false,"types":[]},{"text":"impl PartialOrd&lt;TransferReason&gt; for TransferReason","synthetic":false,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

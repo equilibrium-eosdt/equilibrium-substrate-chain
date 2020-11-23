@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Call","Dispatchable calls."],["Error","Pallet's errors"]],"struct":[["AccountUserGroups","Pallet storage - stores user groups"],["Module",""],["TotalUserGroups","Pallet storage - stores aggregates for each user group"]],"trait":[["Trait","Substrate pallet configuration trait"]]});

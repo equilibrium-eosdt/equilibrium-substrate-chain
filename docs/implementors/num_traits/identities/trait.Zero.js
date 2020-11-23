@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["eq_primitives"] = [{"text":"impl&lt;Balance&gt; Zero for SignedBalance&lt;Balance&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Balance: Member + AtLeast32Bit,&nbsp;</span>","synthetic":false,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

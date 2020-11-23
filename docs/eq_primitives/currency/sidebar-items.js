@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Currency","List of all currencies used in system"]],"mod":[["test",""]]});
